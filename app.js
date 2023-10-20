@@ -14,6 +14,7 @@ app.set("views", "views");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+app.use(express.static("./public"));
 app.use(express.static("views"));
 
 // routes
@@ -28,12 +29,9 @@ app.get("/login", (req, res) => {
 app.get("/", (req, res) => {
   res.render("home");
 });
-app.get("/index", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
-});
-app.use(express.static("public"));
+
 app.use("/", users);
-app.use("/api/v1/tasks", checkAuth, tasks);
+app.use("/api/v1/tasks", tasks);
 
 app.use(notFound);
 app.use(errorHandlerMiddleware);
