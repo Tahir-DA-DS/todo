@@ -5,14 +5,25 @@ const jwt = require("jsonwebtoken");
 
 // console.log('Generated JWT Secret:', jwtSecret);
 
-const signUp = async (req, res) => {
+const signUp = async (username, password) => {
   try {
-    const { username, password } = req.body;
-    const user = new User({ username, password });
-    await user.save();
-    res.status(201).redirect('/login');
+    const hashedPass = await bcrypt.hash(password, 10)
+
+    const userAlready = await User.findOne({username:username})
+
+    if(userAlready){
+      return {
+        message:"user exist already",
+        code:409
+      }
+    } 
+    const newUser = await User.create({username:username, password:hashedPass})
+    return {
+      code:200,
+      newUser
+    }
   } catch (error) {
-    res.status(500).json({ error: "Registration failed" });
+   console.log(error);
   }
 };
 
