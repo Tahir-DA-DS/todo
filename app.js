@@ -27,8 +27,12 @@ app.use("/", usersRoute);
 app.use("/api/v1/tasks", tasks);
 
 
-app.get('/login', (req, res)=>{
-  res.render('login.ejs')
+// app.get('/login', (req, res)=>{
+//   res.render('login.ejs')
+// })
+
+app.get('/dashboard', (req, res)=>{
+  res.render('dashboard.ejs')
 })
 
 // routes

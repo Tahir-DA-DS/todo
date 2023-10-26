@@ -1,0 +1,24 @@
+<%- include("partials/headerdash.ejs")  %>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="/">Todo App</a>
+</nav>
+
+<div class="container mt-5">
+    <form action="/add-todo" method="post" class="d-flex">
+        <input type="text" name="todo" class="form-control" placeholder="Enter Todo">
+        <input type="submit" value="Add Todo" class="btn btn-md btn-primary mx-2">
+    </form>
+
+  
+
+    <ul class="list-group my-5">
+       
+    </ul>
+
+</div>
+
+
+
+
+
+<%- include("partials/footer.ejs")  %>

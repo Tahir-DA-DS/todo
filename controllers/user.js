@@ -7,48 +7,66 @@ const jwt = require("jsonwebtoken");
 
 const signUp = async (username, password) => {
   try {
-    const hashedPass = await bcrypt.hash(password, 10)
 
-    const userAlready = await User.findOne({username:username})
+    const userAlready = await User.findOne({ username: username });
 
-    if(userAlready){
+    if (userAlready) {
       return {
-        message:"user exist already",
-        code:409
-      }
-    } 
-    const newUser = await User.create({username:username, password:hashedPass})
-    return {
-      code:200,
-      newUser
+        message: "user exist already",
+        code: 409,
+      };
     }
+    const newUser = await User.create({
+      username: username,
+      password: password,
+    });
+    return {
+      code: 200,
+      newUser,
+    };
   } catch (error) {
-   console.log(error);
+    console.log(error);
   }
 };
+// const express = require('express');
+// const User = require('./models/user'); // Import your user model
+// const router = express.Router();
+
+// Login route
 
 const login = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
+  const { username, password } = req.body;
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      // Create token
-      const token = jwt.sign(
-        { user_id: user._id, email: user.email },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "2h"
-        }
-      );
-      // save user token
-      user.token = token;
-      res.status(200).redirect('/home');
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid username.' });
     }
-  } catch (err) {
-    res.status(400).send("Invalid Credentials");
-    console.log(err);
+    
+    const isPasswordValid = await user.comparePassword(password);
+    console.log(isPasswordValid, password);
+    
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password.' });
+    }
+
+    // User is authenticated, you can generate a JWT token or set a session here
+    const token = jwt.sign(
+      { user_id: user._id},
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "2h"
+      })
+
+      user.token = token
+    res.redirect('/dashboard')
+    // res.json({ message: 'Login successful' });
+  } catch (error) {
+    
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
   }
 };
+
 
 module.exports = { signUp, login };

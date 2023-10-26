@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const TaskSchema = new mongoose.Schema({
-  name: {
+  todo: {
     type: String,
     required: [true, 'must provide name'],
     trim: true,
@@ -11,6 +11,10 @@ const TaskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
+  user_id:{type:mongoose.Schema.Types.String,
+    ref:"users"
+    }
 })
 
 module.exports = mongoose.model('Task', TaskSchema)

@@ -1,15 +1,28 @@
-const Task = require('../models/Task')
+const Todo = require('../models/Task')
 const asyncWrapper = require('../middleware/async')
 const { createCustomError } = require('../errors/custom-error')
+
+
 const getAllTasks = asyncWrapper(async (req, res) => {
-  const tasks = await Task.find({})
+  const tasks = await Todo.find({})
   res.status(200).json({ tasks })
 })
 
-const createTask = asyncWrapper(async (req, res) => {
-  const task = await Task.create(req.body)
-  res.status(201).json({ task })
-})
+const createTask =  async(todo) => {
+  try {
+    const newTodo = await Todo.create(todo)
+    return{
+      code:200,
+      message:`task created successfully`,
+      data:newTodo
+    }
+  } catch (error) {
+    return {
+      error:error,
+      message:`problem creating task`
+    }
+  }
+}
 
 const getTask = asyncWrapper(async (req, res, next) => {
   const { id: taskID } = req.params
