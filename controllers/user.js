@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 
 const signUp = async (username, password) => {
   try {
-
     const userAlready = await User.findOne({ username: username });
 
     if (userAlready) {
@@ -40,33 +39,24 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid username.' });
+      return res.status(401).json({ message: "Invalid username." });
     }
-    
     const isPasswordValid = await user.comparePassword(password);
-    console.log(isPasswordValid, password);
-    
+ 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid password.' });
+      return res.status(401).json({ message: "Invalid password." });
     }
+    const token = jwt.sign({user:user}, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.cookie("token", token, {httpOnly:true})
 
-    // User is authenticated, you can generate a JWT token or set a session here
-    const token = jwt.sign(
-      { user_id: user._id},
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "2h"
-      })
-
-      user.token = token
-    res.redirect('/dashboard')
+   return res.redirect("/dashboard");
     // res.json({ message: 'Login successful' });
   } catch (error) {
-    
     console.error(error);
-    res.status(500).json({ message: 'An error occurred' });
+    res.status(500).json({ message: "An error occurred" });
   }
 };
-
 
 module.exports = { signUp, login };

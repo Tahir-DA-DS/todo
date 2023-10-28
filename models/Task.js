@@ -9,11 +9,12 @@ const TaskSchema = new mongoose.Schema({
   },
   completed: {
     type: Boolean,
-    default: false,
+    default: false
   },
 
-  user_id:{type:mongoose.Schema.Types.String,
-    ref:"users"
+  user_id:{type:mongoose.Schema.Types.ObjectId,
+    ref:"User",
+    required:true
     }
 })
 

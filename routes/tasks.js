@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const Todo = require('../models/Task')
+const isAuth = require('../middleware/checkauth')
+
+
 
 const {
   getAllTasks,
@@ -15,28 +17,20 @@ const {
 //   res.render('dashboard.ejs')
 // })
 
-router.get("/add-todo", async(req, res) => {
-  const allTodo = await Todo.find();
-  res.render("dasboard.ejs", {todo: allTodo})
-})
+// router.get("/add-todo", async(req, res) => {
+//   const allTodo = await Task.find();
+//   res.render("dasboard.ejs", {todo: allTodo})
+// })
 
 
-router.post('/add-todo', async(req, res)=>{
-  try {
-    const{todo} = req.body
-    const task = await createTask({todo})
-    console.log(task);
-    if(task.code == 201){
-      res.redirect('/add-todo')
-    }
-    res.redirect('/')
-  } catch (error) {
-    res.send(error)
-    
-  }
 
-})
+router.get('/deleteTask/:taskId', deleteTask)
+
+router.post('/add-todo', isAuth, createTask)
+
+
+router.post('/updateTask/:taskId', updateTask)
 router.route('/').get(getAllTasks)
-router.route('/:id').get(getTask).patch(updateTask).delete(deleteTask)
+router.route('/:id').get(getTask)
 
 module.exports = router

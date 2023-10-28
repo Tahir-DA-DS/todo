@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Task</title>
+</head>
+<body>
+    <h1>Update Task</h1>
+
+    <form action="/updateTask/<%= task._id %>" method="post">
+        <input type="text" name="todo" value="<%= task.todo %>" required>
+        <label for="completed">Completed</label>
+        <input type="checkbox" id="completed" name="completed" <% if (task.completed) { %>checked<% } %>>
+        <button type="submit">Update Task</button>
+    </form>
+
+    
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>

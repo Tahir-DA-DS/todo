@@ -1,24 +1,33 @@
-<%- include("partials/headerdash.ejs")  %>
+<%- include("partials/headerdash.ejs") %>
 <nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="/">Todo App</a>
+  <a class="navbar-brand" href="/">Todo App</a>
 </nav>
-
+<h1 style="color: blue; font-size: 24px; text-align: center;">Welcome <%= user.username %> to Your todo Dashboard</h1>
 <div class="container mt-5">
-    <form action="/add-todo" method="post" class="d-flex">
-        <input type="text" name="todo" class="form-control" placeholder="Enter Todo">
-        <input type="submit" value="Add Todo" class="btn btn-md btn-primary mx-2">
-    </form>
+  <form action="/add-todo" method="post" class="d-flex">
+    <input
+      type="text"
+      name="todo"
+      class="form-control"
+      placeholder="Enter Todo"
+    />
+    <input type="submit" value="Add Todo" class="btn btn-md btn-primary mx-2" />
+  </form>
 
+  <ul class="list-group my-5">
+    <% tasks.forEach(task => { %>
+      <% if (task.user_id.toString() === userId.toString()) { %>
+        <li class="list-group-item">
+          <input type="checkbox" id="task_<%= task._id %>" name="completed" value="true" <% if (task.completed) { %>checked<% } %>>
+          <%= task.todo %>
+          <a href="/deleteTask/<%= encodeURIComponent(task._id) %>" class="btn btn-danger btn-sm">Delete</a>
+          <a href="/updateTask/<%= encodeURIComponent(task._id) %>" class="btn btn-primary">Update</a>
+        </li>
+      <% } %>
+    <% }); %>
+  </ul>
+  <a href="/logout" class="btn btn-primary">Logout</a>
   
-
-    <ul class="list-group my-5">
-       
-    </ul>
-
 </div>
 
-
-
-
-
-<%- include("partials/footer.ejs")  %>
+<%- include("partials/footer.ejs") %>
